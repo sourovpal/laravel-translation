@@ -54,3 +54,52 @@ class LanguageManager
         return $next($request);
     }
 }
+
+// Models -----------------------
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
+class Language extends Model
+{
+    use HasFactory;
+
+    public function translations(){
+        return $this->hasMany(Translation::class, 'language_id', 'id');
+    }
+
+}
+
+
+
+
+
+
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Translation extends Model
+{
+    use HasFactory;
+
+    protected $attributes = ['group_key'];
+
+    protected $appends = ['group_key'];
+
+    public function getGroupKeyAttribute(){
+        $attributes = $this->getAttributes();
+        return [$attributes['group'].'.'.$attributes['key'] => $attributes['value']];
+    }
+}
